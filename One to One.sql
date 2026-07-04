@@ -1,38 +1,53 @@
--- One to One 
+-- One to Many
 
---Table 1 
 CREATE TABLE students (
   student_id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL
 );
 INSERT INTO students (name)
-VALUES
-('Akarsh Vyas'), ('Simran Mehta'), ('Rohan Gupta');
+VALUES ('Akarsh Vyas'), ('Simran Mehta'), ('Rohan Gupta');
 
---Table 2
-CREATE TABLE student_profiles (
-  student_id INT PRIMARY KEY,
-  address TEXT,
-  age INT,
-  phone VARCHAR(15)
+
+CREATE TABLE marks (
+  mark_id SERIAL PRIMARY KEY,
+  student_id INT,
+  subject VARCHAR(50),
+  marks INT,
+  FOREIGN KEY (student_id) REFERENCES students(student_id)
 );
-INSERT INTO student_profiles (student_id, address, age, phone)
+INSERT INTO marks (student_id, subject, marks)
 VALUES
-(1, 'Delhi, India', 22, '9999999999'),
-(2, 'Mumbai, India', 21, '8888888888'),
-(3, 'Bangalore, India', 23, '7777777777');
+(1, 'English', 85), (1, 'Math', 89), (1, 'Science', 92),
+(2, 'English', 80), (2, 'Math', 75), (2, 'Science', 78),
+(3, 'English', 72), (3, 'Math', 70), (3, 'Science', 74);
 
---Foreign Key Constraint
-ALTER TABLE student_profiles
-ADD CONSTRAINT fk_student_id
-FOREIGN KEY (student_id)
-REFERENCES students(student_id);
+--joins (inner, left, right, full, cross)
 
---Join
-SELECT s.student_id, s.name, sp.address, sp.age, sp.phone
-FROM students s
-JOIN student_profiles sp ON s.student_id = sp.student_id;
+--inner
+select * from students s
+join marks m
+on s.student_id = m.student_id;
 
+--left
+insert into students (name)
+values ('Kamlessssss');
 
+select * from students s
+left join marks m
+on s.student_id = m.student_id;
 
+--right
+insert into marks (student_id, subject, marks)
+values (4, 'English', 90);
+select * from students s
+right join marks m
+on s.student_id = m.student_id;
 
+--full
+select * from students s
+full join marks m
+on s.student_id = m.student_id;
+
+--cross
+select * from students s
+cross join marks m;
